@@ -1,13 +1,14 @@
-#include <signal.h>
-#include <sys/types.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "Minitalk.h"
 pid_t	get_pid(void)
 {
 	pid_t	pid_server;
 
 	pid_server = getpid();
-	return(pid_server);
+	return (pid_server);
+}
+void	signal_handler(int signal)
+{
+	
 }
 void server(void)
 {

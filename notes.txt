@@ -39,3 +39,22 @@ This process continues until the client has sent all the bits or elements of the
 Note that signals are limited in the amount of information they can carry (typically a single integer value). Therefore, in the Minitalk project, you will need to use multiple signals to transmit a message effectively.
 
 The precise implementation details, such as how to encode and decode the message, manage synchronization, and handle errors, will depend on your specific implementation and design choices within the constraints of the project.
+
+use sigaction,|
+sigemptyset return 0 on success and -1 on error.
+sigaddset add signal signum from set ?
+kill use to send any signal to any process, specified by PID
+getpid returns process ID of calling process.
+pause causes the calling process to sleep until a signal is delivered
+sleep causes the process to sleep untilk x seconds or signal that is not ignored comes and wakes it up.
+exit terminates a process.
+
+
+
+
+
+
+
+
+
+

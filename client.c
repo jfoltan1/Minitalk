@@ -1,9 +1,9 @@
-#include "Minitalk.h"
+#include "minitalk.h"
 
-void client()
+int main (int argc, char **argv)
 {
-	int i;
+	int spid;
 
-	i = 0;
-	i = kill("",);
+	spid = ft_atoi(argv[1]);
+	kill(spid, SIGINT);
 }

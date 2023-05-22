@@ -1,21 +1,26 @@
-#include "Minitalk.h"
-pid_t	get_pid(void)
-{
-	pid_t	pid_server;
+#include "minitalk.h"
 
-	pid_server = getpid();
-	return (pid_server);
-}
-void	signal_handler(int signal)
+void	action(int sig, siginfo_t *info, void *context)
 {
-	
-}
-void server(void)
-{
-	printf("%d\n",get_pid());
-	pause();
+	if (signal == SIGUSR1)
+		printf("1");
+	if (signal == SIGUSR2)
+		printf("0");
 }
 int main(void)
 {
-	server();
+	int	pid;
+	struct sigaction	act;
+
+	pid = getpid ();
+	printf ("Server's PID: %d \n",pid);
+
+	act.sa_sigaction = action;
+	sigemptyset(&act.sa_mask);
+	act.sa_flags = SA_SIGINFO;
+	while (1)
+	{
+		pause();
+	}
+
 }

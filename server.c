@@ -1,41 +1,52 @@
 #include "Minitalk.h"
-	char btoa(char *src)
+char *btoa(char *src)
 {
 	int	a;
 	int i;
+	int b;
+	int c;
+	char *ascii;
+
+	i = 0;
+	b = (ft_strlen(src) / 8);
+	ascii = ft_calloc(b + 1, sizeof(char));
+	b = 0;
+	c = 0;
+	while (src[i])
+	{
+		while (c < 8)
+		{
+			a = (a * 2) + (src[i] - '0');
+		 	i++;
+			c++;
+		}
+		ascii[b] = (char)a;
+		b++;
+		c = 0;
+	}
+	ascii[b] = '\0';
+	return(ascii);
+}
+/* have to implement an allocating function, to write everything into one string of 01s */
+void	second_handler(int sig)
+{
+	int	a;
+	int	i;
+	char *ascii;
 
 	i = 0;
 	a = 0;
-	while (src[i])
-	{
-		a = (a * 2) + (src[i] - '0');
-		 i++;
-	}
-	return((char)a);
+	while (
+	
 }
-void action(int sig, siginfo_t *info, void *context)
+void first_handler(int sig, siginfo_t *info, void *context)
 {
     (void)context;
 	(void)info;
-	//char	*ascii;
-	//int		i;
-
-	/*ascii = calloc(8, sizeof(char));
-	i = 0;
-	while (i < 8)
+	if (sig == SIGUSR1 || sig == SIGUSR2)
 	{
-		if (sig == SIGUSR1)
-       		ascii[i] = '1';
-    	if (sig == SIGUSR2)
-        	ascii[i] = '0';
-	i++;
-	}*/
-	//printf("%c",btoa(ascii));
-	if (sig == SIGUSR1)
-       		printf("1");
-    if (sig == SIGUSR2)
-        	printf("0");
-    fflush(stdout);
+		second_handler(int sig);
+	}
 }
 
 int main(void)
@@ -45,7 +56,7 @@ int main(void)
 
     pid = getpid();
     printf("Server's PID: %d\n", pid);
-    act.sa_sigaction = action;
+    act.sa_sigaction = first_handler;
     sigemptyset(&act.sa_mask);
     act.sa_flags = SA_SIGINFO;
     sigaction(SIGUSR1, &act, NULL);

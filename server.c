@@ -62,11 +62,9 @@ void recievebinarystring(int sig)
 	if (checkfornullbyte(binarystring))
 	{
 		printf("%s\n",btoa(binarystring));
-		printf("%s",binarystring);
 		fflush(stdout);
 		binarystring[0] = '\0';
 	}
-	fflush(stdout);
 }
 void action(int sig, siginfo_t *info, void *context)
 {
@@ -96,3 +94,4 @@ int main(void)
 		pause();
 	}
 }
+//signal verification

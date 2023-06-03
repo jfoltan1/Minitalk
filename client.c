@@ -50,7 +50,18 @@ char *atob(char ascii)
 	binary[8] = '\0';
 	return (ft_strreverse(binary));
 }
+void	Error_check(int argc)
+{
+	if (argc != 3)
+	{
+		printf("Invalid input! First argument has to be PID,second argument has to be a string in quotation marks!");
+		exit(0);
+	}
+}
+void	send_spid(char *pid)
+{
 
+}
 int main (int argc, char **argv)
 {
 	int spid;
@@ -58,26 +69,21 @@ int main (int argc, char **argv)
 	int a;
 	char *btosend;
 
-	(void)argc;
+	Error_check(argc);
 	a = 0;
 	 i = 0;
 	spid = ft_atoi(argv[1]);
+	send_spid(itoa(getpid()));
 	 while (argv[2][i])
 	 {
 		 btosend = atob(argv[2][i]);
 		while (btosend[a])
 		{
 			if (btosend[a] == '1')
-			{
 				kill(spid, SIGUSR1);
-				printf("1");
-			}
 			if (btosend[a] == '0')
-			{
 				kill(spid, SIGUSR2);
-				printf("0");
-			}
-			usleep(1);
+			usleep(20);
 			a++;
 		}
 		a = 0;
@@ -86,8 +92,11 @@ int main (int argc, char **argv)
 	while (a < 8)
 	{
 		kill(spid,SIGUSR2);
-		usleep(1);
+		usleep(20);
 		a++;
 	}
 }
 // implement a check for bs input
+// error handling
+//signal verification
+

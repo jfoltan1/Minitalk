@@ -12,7 +12,7 @@ char *ft_strreverse(char *src)
     output = (char *)malloc(sizeof(char) * (i + 1));
     if (!output)
         return (NULL);
-    
+
     while (i > 0)
     {
         i--;
@@ -20,7 +20,7 @@ char *ft_strreverse(char *src)
         a++;
     }
     output[a] = '\0';
-    
+
     return output;
 }
 char *atob(char ascii)
@@ -54,35 +54,40 @@ char *atob(char ascii)
 int main (int argc, char **argv)
 {
 	int spid;
-	int	i;
+	 int	i;
 	int a;
 	char *btosend;
-	
+
 	(void)argc;
 	a = 0;
-	i = 0;
+	 i = 0;
 	spid = ft_atoi(argv[1]);
-	while (argv[2][i])
-	{
-		btosend = atob(argv[2][i]);
-		printf("%s ",btosend);
+	 while (argv[2][i])
+	 {
+		 btosend = atob(argv[2][i]);
 		while (btosend[a])
 		{
 			if (btosend[a] == '1')
+			{
 				kill(spid, SIGUSR1);
+				printf("1");
+			}
 			if (btosend[a] == '0')
+			{
 				kill(spid, SIGUSR2);
+				printf("0");
+			}
 			usleep(1);
 			a++;
 		}
 		a = 0;
-		i++;
-	}
-	/*while (a <= 8)
+		 i++;
+	 }
+	while (a < 8)
 	{
 		kill(spid,SIGUSR2);
 		usleep(1);
 		a++;
-	}*/
+	}
 }
 // implement a check for bs input

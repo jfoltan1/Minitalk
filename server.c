@@ -48,7 +48,6 @@ int	checkfornullbyte(char *str)
     else
         return 0;
 }
-
 void recievebinarystring(int sig)
 {
 	char *binaryvalue;
@@ -61,8 +60,8 @@ void recievebinarystring(int sig)
 	binarystring = ft_strjoin(binarystring,binaryvalue);
 	if (checkfornullbyte(binarystring))
 	{
-		printf("%s\n",btoa(binarystring));
-		fflush(stdout);
+		ft_printf("%s\n",btoa(binarystring));
+		// fflush(stdout);
 		binarystring[0] = '\0';
 	}
 }
@@ -82,7 +81,7 @@ int main(void)
 
 	binarystring = ft_calloc(2, sizeof(char));
     pid = getpid();
-    printf("Server's PID: %d\n", pid);
+    ft_printf("Server's PID: %d\n", pid);
     act.sa_sigaction = action;
     sigemptyset(&act.sa_mask);
     act.sa_flags = SA_SIGINFO;

@@ -5,8 +5,8 @@
 
 # include <signal.h>
 # include <sys/types.h>
-# include <stdio.h>
 # include <unistd.h>
 # include "./libft/libft.h"
+# include "./ft_printf/ft_printf.h"
 
 #endif

@@ -1,5 +1,6 @@
 #include "Minitalk.h"
-
+#include "./libft/libft.h"
+#include <stdio.h>
 char *ft_strreverse(char *src)
 {
     int i;
@@ -53,31 +54,11 @@ void	Error_check(int argc)
 {
 	if (argc != 3)
 	{
-		ft_printf("Invalid input! First argument has to be PID,second argument has to be a string in quotation marks!");
+		printf("Invalid input! First argument has to be PID,second argument has to be a string in quotation marks!");
 		exit(0);
 	}
 }
-void	send_spid(char *pid,int spid)
-{
-	int		i;
-	i = 0;
-	while (pid[i])
-	 {
-		if (pid[i] == '1')
-			kill(spid, SIGUSR1);
-		if (pid[i] == '0')
-			kill(spid, SIGUSR2);
-		usleep(50);
-		i++;
-	}
-	i = 0;
-	while (i < 8)
-	{
-		kill(spid,SIGUSR2);
-		usleep(50);
-		i++;
-	}
-}
+
 int main (int argc, char **argv)
 {
 	int spid;
@@ -89,7 +70,6 @@ int main (int argc, char **argv)
 	a = 0;
 	 i = 0;
 	spid = ft_atoi(argv[1]);
-	send_spid(ft_itoa(getpid()),spid);
 	 while (argv[2][i])
 	 {
 		 btosend = atob(argv[2][i]);
@@ -99,7 +79,7 @@ int main (int argc, char **argv)
 				kill(spid, SIGUSR1);
 			if (btosend[a] == '0')
 				kill(spid, SIGUSR2);
-			usleep(20); //myslim ze tu uz nemusim riesit kazde pismeno ale celu string asi?
+			usleep(100); //myslim ze tu uz nemusim riesit kazde pismeno ale celu string asi?
 			a++;
 		}
 		a = 0;
@@ -108,7 +88,7 @@ int main (int argc, char **argv)
 	while (a < 8)
 	{
 		kill(spid,SIGUSR2);
-		usleep(20);
+		usleep(100);
 		a++;
 	}
 }

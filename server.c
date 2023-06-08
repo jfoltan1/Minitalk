@@ -1,33 +1,8 @@
 #include "Minitalk.h"
-char *binarystring;
-char *btoa(char *src)
-{
-	int	a;
-	int i;
-	int b;
-	int c;
-	char *ascii;
+#include "./libft/libft.h"
+#include <stdio.h>
 
-	i = 0;
-	b = (ft_strlen(src) / 8);
-	ascii = ft_calloc(b + 1, sizeof(char));
-	b = 0;
-	c = 0;
-	while (src[i])
-	{
-		while (c < 8)
-		{
-			a = (a * 2) + (src[i] - '0');
-		 	i++;
-			c++;
-		}
-		ascii[b] = (char)a;
-		b++;
-		c = 0;
-	}
-	ascii[b] = '\0';
-	return(ascii);
-}
+char *binarystring;
 int	checkfornullbyte(char *str)
 {
 	int i = ft_strlen(str) - 1;
@@ -48,6 +23,23 @@ int	checkfornullbyte(char *str)
     else
         return 0;
 }
+char btoa(char *src)
+{
+	int	a;
+	int i;
+
+	i = 0;
+	a = 0;
+	if (checkfornullbyte(src))
+		return('\0');
+	while (src[i])
+	{
+			a = (a * 2) + (src[i] - '0');
+		 	i++;
+	}
+	return(a);
+}
+
 void recievebinarystring(int sig)
 {
 	char *binaryvalue;
@@ -57,10 +49,14 @@ void recievebinarystring(int sig)
 		binaryvalue[0] = '1';
 	if (sig == SIGUSR2)
 		binaryvalue[0] = '0';
-	binarystring = ft_strjoin(binarystring,binaryvalue);
-	if (checkfornullbyte(binarystring))
+	binarystring = ft_strjoin(binarystring,binaryvalue); // set this func to return a char and not use a global var 
+	free(binaryvalue);
+	if (ft_strlen(binarystring) == 8)
 	{
-		ft_printf("%s\n",btoa(binarystring));
+		if (btoa(binarystring) == '\0')
+			printf("\n");
+		else
+			printf("%c",btoa(binarystring));
 		// fflush(stdout);
 		binarystring[0] = '\0';
 	}
@@ -81,7 +77,7 @@ int main(void)
 
 	binarystring = ft_calloc(2, sizeof(char));
     pid = getpid();
-    ft_printf("Server's PID: %d\n", pid);
+    printf("Server's PID: %d\n", pid);
     act.sa_sigaction = action;
     sigemptyset(&act.sa_mask);
     act.sa_flags = SA_SIGINFO;

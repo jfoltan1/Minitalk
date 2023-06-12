@@ -1,6 +1,5 @@
 #include "libft.h"
-#include <stddef.h>
-#include <stdlib.h>
+
 char *ft_strreverse(char *src)
 {
     int i;

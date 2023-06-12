@@ -1,35 +1,35 @@
 LIBFT = libft
-PRINTF = ft_printf
 LIBA = libft.a
-PRIA = libftprintf.a
+
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-RM	= rm -f
+RM = rm -f
+
 
 SRCA = server.c
 SRCB = client.c
 
 all: sc clean
 
-sc: printf libft
-				$(CC) $(CFLAGS) $(SRCA) $(PRIA) -o server
-				$(CC) $(CFLAGS) $(SRCB) $(LIBA) $(PRIA) - o client
-
 libft:
-		@make -C $(LIBFT)
-		@cp $(LIBFT)/$(LIBA) .
-printf:
-		@make -C $(LIBFT)
-		@cp $(LIBFT)/$(LIBA) .
+	@make $(LIBFT)
+	@cp $(LIBFT)/$(LIBA) .
+
+sc: libft
+	$(CC)  $(CFLAGS) $(SRCA) $(LIBFT)/$(LIBA) -o server
+	$(CC)  $(CFLAGS) $(SRCB) $(LIBFT)/$(LIBA) -o client
+
 clean:
-		$(RM) libft.a libftprintf.a
-		make -C $(LIBFT) clean
-		make -C $(PRINTF) clean
+	$(RM)  $(LIBA)
+	make -C $(LIBFT) fclean
+
 fclean: clean
-		make -C $(LIBFT) fclean
-		make -C $(PRINTF) fclean
+	make -C $(LIBFT) fclean
+
 finish: fclean
-		$(RM) server client
+	$(RM) server
+	$(RM) client
 
 re: fclean all
+
 reall: finish all

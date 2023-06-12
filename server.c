@@ -1,92 +1,113 @@
-#include "Minitalk.h"
-#include "./libft/libft.h"
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jfoltan <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/12 18:58:05 by jfoltan           #+#    #+#             */
+/*   Updated: 2023/06/12 19:26:47 by jfoltan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-char *binarystring;
+#include "Minitalk.h"
+
+char		*g_binaryvalue;
+
 int	checkfornullbyte(char *str)
 {
-	int i = ft_strlen(str) - 1;
-    int zeros = 0;
+	int		i;
+	int		zeros;
 
-    while (i >= 0 && zeros < 8)
-    {
-        if (str[i] == '0')
-            zeros++;
-        else
-            zeros = 0;
-
-        i--;
-    }
-
-    if (zeros == 8)
-        return 1;
-    else
-        return 0;
+	zeros = 0;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '0')
+			zeros++;
+		else
+			zeros = 0;
+		i++;
+	}
+	if (zeros == 8)
+		return (1);
+	else
+		return (0);
 }
-char btoa(char *src)
+
+char	btoa(char *src)
 {
 	int	a;
-	int i;
+	int	i;
 
 	i = 0;
 	a = 0;
 	if (checkfornullbyte(src))
-		return('\0');
+		return ('\0');
 	while (src[i])
 	{
-			a = (a * 2) + (src[i] - '0');
-		 	i++;
+		a = (a * 2) + (src[i] - '0');
+		i++;
 	}
-	return(a);
+	return (a);
 }
 
-void recievebinarystring(int sig)
+void	recievebinarystring(int sig)
 {
-	char *binaryvalue;
+	static int	i = 0;
 
-	binaryvalue = ft_calloc(2, sizeof(char));
 	if (sig == SIGUSR1)
-		binaryvalue[0] = '1';
+	{	
+		g_binaryvalue[i] = '1';
+		i++;
+	}
 	if (sig == SIGUSR2)
-		binaryvalue[0] = '0';
-	binarystring = ft_strjoin(binarystring,binaryvalue); // set this func to return a char and not use a global var 
-	free(binaryvalue);
-	if (ft_strlen(binarystring) == 8)
+	{		
+		g_binaryvalue[i] = '0';
+		i++;
+	}
+	if (i == 8)
 	{
-		if (btoa(binarystring) == '\0')
-			printf("\n");
+		if (btoa(g_binaryvalue) == '\0')
+			ft_putchar_fd('\n', 1);
 		else
-			printf("%c",btoa(binarystring));
-		// fflush(stdout);
-		binarystring[0] = '\0';
+			ft_putchar_fd(btoa(g_binaryvalue), 1);
+		g_binaryvalue[0] = '\0';
+		i = 0;
 	}
 }
-void action(int sig, siginfo_t *info, void *context)
+
+void	action(int sig, siginfo_t *info, void *context)
 {
 	(void)info;
 	(void)context;
-
 	if (sig == SIGUSR1 || sig == SIGUSR2)
 		recievebinarystring(sig);
+	if (sig == SIGINT)
+	{
+		free(g_binaryvalue);
+		exit(1);
+	}
 }
 
-int main(void)
+int	main(void)
 {
-	int pid;
-    struct sigaction act;
+	int					pid;
+	struct sigaction	act;
 
-	binarystring = ft_calloc(2, sizeof(char));
-    pid = getpid();
-    printf("Server's PID: %d\n", pid);
-    act.sa_sigaction = action;
-    sigemptyset(&act.sa_mask);
-    act.sa_flags = SA_SIGINFO;
-    sigaction(SIGUSR1, &act, NULL);
-    sigaction(SIGUSR2, &act, NULL);
-
-    while (1)
-    {
+	g_binaryvalue = ft_calloc(9, sizeof(char));
+	pid = getpid();
+	ft_putstr_fd("Server's PID: ", 1);
+	ft_putnbr_fd(pid, 1);
+	ft_putchar_fd('\n', 1);
+	act.sa_sigaction = action;
+	sigemptyset(&act.sa_mask);
+	act.sa_flags = SA_SIGINFO;
+	sigaction(SIGUSR1, &act, NULL);
+	sigaction(SIGINT, &act, NULL);
+	sigaction(SIGUSR2, &act, NULL);
+	while (1)
+	{
 		pause();
 	}
 }
-//signal verification

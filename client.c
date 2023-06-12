@@ -1,41 +1,52 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jfoltan <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/12 19:10:14 by jfoltan           #+#    #+#             */
+/*   Updated: 2023/06/12 19:31:15 by jfoltan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Minitalk.h"
-#include "./libft/libft.h"
-#include <stdio.h>
-char *ft_strreverse(char *src)
+
+char	*ft_strreverse(char *src)
 {
-    int i;
-    char *output;
-    int a;
+	int		i;
+	char	*output;
+	int		a;
 
-    a = 0;
-    i = ft_strlen(src);
-    output = (char *)malloc(sizeof(char) * (i + 1));
-    if (!output)
-        return (NULL);
-
-    while (i > 0)
-    {
-        i--;
-        output[a] = src[i];
-        a++;
-    }
-    output[a] = '\0';
-
-    return output;
+	a = 0;
+	i = ft_strlen(src);
+	output = (char *)malloc(sizeof(char) * (i + 1));
+	if (!output)
+		return (NULL);
+	while (i > 0)
+	{
+		i--;
+		output[a] = src[i];
+		a++;
+	}
+	output[a] = '\0';
+	return (output);
 }
-char *atob(char ascii)
+
+char	*atob(char ascii)
 {
-	int	i;
-	int	a;
-	int b;
-	char *binary;
-	binary = (char*)malloc(sizeof(char) * 8);
+	int		i;
+	int		a;
+	int		b;
+	char	*binary;
+
+	binary = (char *)malloc(sizeof(char) * 8);
 	if (!binary)
-		return(NULL);
+		return (NULL);
 	b = 0;
 	i = 1;
 	a = (int)ascii;
-	while(a != 0)
+	while (a != 0)
 	{
 		i = a % 2;
 		a = a / 2;
@@ -50,49 +61,54 @@ char *atob(char ascii)
 	binary[8] = '\0';
 	return (ft_strreverse(binary));
 }
-void	Error_check(int argc)
+
+void	error_check(int argc)
 {
 	if (argc != 3)
 	{
-		printf("Invalid input! First argument has to be PID,second argument has to be a string in quotation marks!");
+		ft_putstr_fd("Invalid input!", 1);
 		exit(0);
 	}
 }
 
-int main (int argc, char **argv)
+void	send_null(int spid)
 {
-	int spid;
-	 int	i;
-	int a;
-	char *btosend;
+	int	a;
 
-	Error_check(argc);
 	a = 0;
-	 i = 0;
-	spid = ft_atoi(argv[1]);
-	 while (argv[2][i])
-	 {
-		 btosend = atob(argv[2][i]);
-		while (btosend[a])
-		{
-			if (btosend[a] == '1')
-				kill(spid, SIGUSR1);
-			if (btosend[a] == '0')
-				kill(spid, SIGUSR2);
-			usleep(100); //myslim ze tu uz nemusim riesit kazde pismeno ale celu string asi?
-			a++;
-		}
-		a = 0;
-		 i++;
-	 }
 	while (a < 8)
 	{
-		kill(spid,SIGUSR2);
+		kill(spid, SIGUSR2);
 		usleep(100);
 		a++;
 	}
 }
-// implement a check for bs input
-// error handling
-//signal verification
 
+int	main(int argc, char **argv)
+{
+	int		spid;
+	int		i;
+	int		a;
+	char	*btosend;
+
+	error_check(argc);
+	a = 0;
+	i = 0;
+	spid = ft_atoi(argv[1]);
+	while (argv[2][i])
+	{
+		btosend = atob(argv[2][i]);
+		while (btosend[a])
+		{		
+			if (btosend[a] == '1')
+				kill(spid, SIGUSR1);
+			if (btosend[a] == '0')
+				kill(spid, SIGUSR2);
+			usleep(100);
+			a++;
+		}
+		a = 0;
+		i++;
+	}
+	send_null(spid);
+}

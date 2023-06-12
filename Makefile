@@ -9,13 +9,12 @@ RM = rm -f
 SRCA = server.c
 SRCB = client.c
 
-all: sc clean
+all: lib sc
 
-libft:
-	@make $(LIBFT)
-	@cp $(LIBFT)/$(LIBA) .
+lib:
+	@$(MAKE) -C libft
 
-sc: libft
+sc: lib
 	$(CC)  $(CFLAGS) $(SRCA) $(LIBFT)/$(LIBA) -o server
 	$(CC)  $(CFLAGS) $(SRCB) $(LIBFT)/$(LIBA) -o client
 
@@ -25,11 +24,9 @@ clean:
 
 fclean: clean
 	make -C $(LIBFT) fclean
-
-finish: fclean
 	$(RM) server
 	$(RM) client
 
-re: fclean all
+re:		fclean all
 
-reall: finish all
+.PHONY : all clean fclean re

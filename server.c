@@ -57,12 +57,12 @@ void	recievebinarystring(int sig)
 	static int	i = 0;
 
 	if (sig == SIGUSR1)
-	{	
+	{
 		g_binaryvalue[i] = '1';
 		i++;
 	}
 	if (sig == SIGUSR2)
-	{		
+	{
 		g_binaryvalue[i] = '0';
 		i++;
 	}
@@ -82,7 +82,12 @@ void	action(int sig, siginfo_t *info, void *context)
 	(void)info;
 	(void)context;
 	if (sig == SIGUSR1 || sig == SIGUSR2)
+	{
 		recievebinarystring(sig);
+		usleep(150);
+		if (kill(info->si_pid,SIGUSR1) == -1)
+			ft_putstr_fd("\n\nTransmission failed!", 1);
+	}
 	if (sig == SIGINT)
 	{
 		free(g_binaryvalue);
@@ -100,8 +105,7 @@ int	main(void)
 	ft_putstr_fd("Server's PID: ", 1);
 	ft_putnbr_fd(pid, 1);
 	ft_putchar_fd('\n', 1);
-	act.sa_sigaction = action;
-	sigemptyset(&act.sa_mask);
+	act.sa_sigaction = &action;
 	act.sa_flags = SA_SIGINFO;
 	sigaction(SIGUSR1, &act, NULL);
 	sigaction(SIGINT, &act, NULL);

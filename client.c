@@ -12,27 +12,6 @@
 
 #include "Minitalk.h"
 
-char	*ft_strreverse(char *src)
-{
-	int		i;
-	char	*output;
-	int		a;
-
-	a = 0;
-	i = ft_strlen(src);
-	output = (char *)malloc(sizeof(char) * (i + 1));
-	if (!output)
-		return (NULL);
-	while (i > 0)
-	{
-		i--;
-		output[a] = src[i];
-		a++;
-	}
-	output[a] = '\0';
-	return (output);
-}
-
 char	*atob(char ascii)
 {
 	int		i;
@@ -62,12 +41,12 @@ char	*atob(char ascii)
 	return (ft_strreverse(binary));
 }
 
-void	error_check(int argc)
+void	error_check(int argc, int spid)
 {
-	if (argc != 3)
+	if (argc != 3 || (spid < 5000))
 	{
-		ft_putstr_fd("Invalid input!", 1);
-		exit(0);
+		ft_putstr_fd("Invalid input!", 2);
+		exit(2);
 	}
 }
 
@@ -84,30 +63,50 @@ void	send_null(int spid)
 	}
 }
 
+void	action_client(int sig, siginfo_t *info, void *context)
+{
+	(void)context;
+	(void)info;
+	static int i = 0;
+
+
+	i = 0;
+	if (sig == SIGUSR1)
+			i++;
+	if (sig == SIGINT)
+		exit(0);
+}
 int	main(int argc, char **argv)
 {
 	int		spid;
-	int		i;
-	int		a;
-	char	*btosend;
+	struct sigaction act;
+	int	i;
+	char		*g_string_to_send;
 
-	error_check(argc);
-	a = 0;
 	i = 0;
+	g_string_to_send = ft_calloc(8, sizeof(char));
+	error_check(argc,ft_atoi(argv[1]));
 	spid = ft_atoi(argv[1]);
 	while (argv[2][i])
 	{
-		btosend = atob(argv[2][i]);
-		while (btosend[a])
-		{		
-			if (btosend[a] == '1')
-				kill(spid, SIGUSR1);
-			if (btosend[a] == '0')
-				kill(spid, SIGUSR2);
-			usleep(100);
-			a++;
-		}
-		a = 0;
+		g_string_to_send = ft_strjoin(g_string_to_send, atob(argv[2][i]));
+		i++;
+	}
+	i = 0;
+
+	act.sa_sigaction = &action_client;
+	act.sa_flags = SA_SIGINFO;
+	sigaction(SIGINT, &act, NULL);
+	sigaction(SIGUSR1, &act, NULL);
+	while (g_string_to_send[i])
+	{
+		if (g_string_to_send[i] == '1')
+			if (kill(spid,SIGUSR1) == -1)
+				ft_putstr_fd("\n\nTransmission failed!", 1);
+		if (g_string_to_send[i] == '0')
+			if (kill(spid,SIGUSR2) == -1)
+				ft_putstr_fd("\n\nTransmission failed!", 1);
+		pause();
 		i++;
 	}
 	send_null(spid);

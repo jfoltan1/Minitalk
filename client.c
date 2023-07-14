@@ -6,7 +6,7 @@
 /*   By: jfoltan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:10:14 by jfoltan           #+#    #+#             */
-/*   Updated: 2023/06/12 19:31:15 by jfoltan          ###   ########.fr       */
+/*   Updated: 2023/07/14 16:17:58 by jfoltan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*atob(char ascii)
 	int		b;
 	char	*binary;
 
-	binary = (char *)malloc(sizeof(char) * 8);
+	binary = malloc(9 * sizeof(char));
 	if (!binary)
 		return (NULL);
 	b = 0;
@@ -29,21 +29,21 @@ char	*atob(char ascii)
 	{
 		i = a % 2;
 		a = a / 2;
-		binary[b] = i + 48;
+		binary[b] = '0' + i;
 		b++;
 	}
-	while (b <= 7)
+	while (b < 8)
 	{
 		binary[b] = '0';
 		b++;
 	}
-	binary[8] = '\0';
+	binary[b] = '\0';
 	return (ft_strreverse(binary));
 }
 
 void	error_check(int argc, int spid)
 {
-	if (argc != 3 || (spid < 5000))
+	if (argc != 3 || (spid <= 4500))
 	{
 		ft_putstr_fd("Invalid input!", 2);
 		exit(2);
@@ -61,7 +61,6 @@ void	send_null(int spid)
 		pause();
 		a++;
 	}
-	exit(0);
 }
 
 void	action_client(int sig, siginfo_t *info, void *context)
@@ -73,30 +72,32 @@ void	action_client(int sig, siginfo_t *info, void *context)
 
 	i = 0;
 	if (sig == SIGUSR1)
-			i++;
+		i++;
 	if (sig == SIGINT || sig == SIGUSR2)
-		{
-			free(g_string_to_send);
-			exit(0);
-		}
+	{
+		free(g_string_to_send);
+		exit(0);
+	}
 }
 int	main(int argc, char **argv)
 {
 	int		spid;
 	struct sigaction act;
 	int	i;
+	char	*binary;
 
+	error_check(argc,ft_atoi(argv[1]));
 	i = 0;
 	g_string_to_send = ft_calloc(8, sizeof(char));
-	error_check(argc,ft_atoi(argv[1]));
 	spid = ft_atoi(argv[1]);
 	while (argv[2][i])
 	{
-		g_string_to_send = ft_strjoin(g_string_to_send, atob(argv[2][i]));
-		i++;
+		binary = atob(argv[2][i]);	
+		g_string_to_send = ft_strjoin(g_string_to_send,binary);
+		i++;	
 	}
 	i = 0;
-
+	sigemptyset(&act.sa_mask);
 	act.sa_sigaction = &action_client;
 	act.sa_flags = SA_SIGINFO;
 	sigaction(SIGINT, &act, NULL);

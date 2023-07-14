@@ -6,9 +6,10 @@
 /*   By: jfoltan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 10:51:35 by jfoltan           #+#    #+#             */
-/*   Updated: 2022/12/19 10:51:37 by jfoltan          ###   ########.fr       */
+/*   Updated: 2023/07/14 16:17:53 by jfoltan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 #include <stddef.h>
 #include <stdlib.h>
@@ -37,5 +38,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		i++;
 	}
 	ptr[i] = 0;
+	free((void*)s1);
+	free((void*)s2);
 	return (ptr);
 }

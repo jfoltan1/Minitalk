@@ -8,7 +8,7 @@ char *ft_strreverse(char *src)
 
     a = 0;
     i = ft_strlen(src);
-    output = (char *)malloc(sizeof(char) * (i + 1));
+    output = malloc(sizeof(char) * (i + 1));
     if (!output)
         return (NULL);
     
@@ -19,6 +19,6 @@ char *ft_strreverse(char *src)
         a++;
     }
     output[a] = '\0';
-    
-    return output;
+    free(src);
+    return (output);
 }

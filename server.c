@@ -6,7 +6,7 @@
 /*   By: jfoltan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 18:58:05 by jfoltan           #+#    #+#             */
-/*   Updated: 2023/06/12 19:26:47 by jfoltan          ###   ########.fr       */
+/*   Updated: 2023/07/14 16:57:23 by jfoltan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ int main(void)
 	ft_putstr_fd("Server's PID: ", 1);
 	ft_putnbr_fd(pid, 1);
 	ft_putchar_fd('\n', 1);
+	sigemptyset(&act.sa_mask);	
 	act.sa_sigaction = &action;
 	act.sa_flags = SA_SIGINFO;
 	sigaction(SIGUSR1, &act, NULL);

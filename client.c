@@ -6,12 +6,14 @@
 /*   By: jfoltan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:10:14 by jfoltan           #+#    #+#             */
-/*   Updated: 2023/07/14 16:17:58 by jfoltan          ###   ########.fr       */
+/*   Updated: 2023/07/14 20:40:32 by jfoltan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minitalk.h"
+
 char		*g_string_to_send;
+
 char	*atob(char ascii)
 {
 	int		i;
@@ -41,15 +43,6 @@ char	*atob(char ascii)
 	return (ft_strreverse(binary));
 }
 
-void	error_check(int argc, int spid)
-{
-	if (argc != 3 || (spid <= 4500))
-	{
-		ft_putstr_fd("Invalid input!", 2);
-		exit(2);
-	}
-}
-
 void	send_null(int spid)
 {
 	int	a;
@@ -65,54 +58,72 @@ void	send_null(int spid)
 
 void	action_client(int sig, siginfo_t *info, void *context)
 {
-	(void)context;
-	(void)info;
-	static int i = 0;
+	static int	i = 0;
 
-
+	(void) context;
+	(void) info;
 	i = 0;
 	if (sig == SIGUSR1)
 		i++;
 	if (sig == SIGINT || sig == SIGUSR2)
 	{
-		free(g_string_to_send);
-		exit(0);
+		free (g_string_to_send);
+		exit (0);
 	}
 }
-int	main(int argc, char **argv)
+
+void	send_binary(int spid, char *str)
 {
-	int		spid;
-	struct sigaction act;
-	int	i;
+	int		i;
 	char	*binary;
 
-	error_check(argc,ft_atoi(argv[1]));
 	i = 0;
-	g_string_to_send = ft_calloc(8, sizeof(char));
-	spid = ft_atoi(argv[1]);
-	while (argv[2][i])
+	while (str[i])
 	{
-		binary = atob(argv[2][i]);	
-		g_string_to_send = ft_strjoin(g_string_to_send,binary);
-		i++;	
+		binary = atob(str[i]);
+		g_string_to_send = ft_strjoin(g_string_to_send, binary);
+		i++;
 	}
 	i = 0;
-	sigemptyset(&act.sa_mask);
-	act.sa_sigaction = &action_client;
-	act.sa_flags = SA_SIGINFO;
-	sigaction(SIGINT, &act, NULL);
-	sigaction(SIGUSR1, &act, NULL);
-	sigaction(SIGUSR2, &act, NULL);
 	while (g_string_to_send[i])
 	{
 		if (g_string_to_send[i] == '1')
-			if (kill(spid,SIGUSR1) == -1)
+			if (kill(spid, SIGUSR1) == -1)
 				ft_putstr_fd("\n\nTransmission failed!", 1);
 		if (g_string_to_send[i] == '0')
-			if (kill(spid,SIGUSR2) == -1)
+			if (kill(spid, SIGUSR2) == -1)
 				ft_putstr_fd("\n\nTransmission failed!", 1);
 		pause();
 		i++;
 	}
 	send_null(spid);
+}
+
+int	main(int argc, char **argv)
+{
+	int					spid;
+	struct sigaction	act;
+
+	if (argc != 3)
+	{
+		ft_putstr_fd("Invalid input!", 2);
+		exit(2);
+	}
+	spid = ft_atoi(argv[1]);
+	if (spid <= 1000)
+	{
+		ft_putstr_fd("This pid is reserved for the system!", 2);
+		exit(2);
+	}
+	else
+	{
+		g_string_to_send = ft_calloc(8, sizeof(char));
+		sigemptyset(&act.sa_mask);
+		act.sa_sigaction = &action_client;
+		act.sa_flags = SA_SIGINFO;
+		sigaction(SIGINT, &act, NULL);
+		sigaction(SIGUSR1, &act, NULL);
+		sigaction(SIGUSR2, &act, NULL);
+		send_binary(spid, argv[2]);
+	}
 }

@@ -6,9 +6,10 @@
 /*   By: jfoltan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/20 18:22:47 by jfoltan           #+#    #+#             */
-/*   Updated: 2022/12/20 18:22:48 by jfoltan          ###   ########.fr       */
+/*   Updated: 2023/07/14 21:01:24 by jfoltan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
 static int	ft_isneg(long f)
@@ -24,7 +25,7 @@ static	int	ft_len(long l)
 
 	i = 0;
 	if (ft_isneg(l))
-	{	
+	{
 		i++;
 		l = l * -1;
 	}

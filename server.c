@@ -6,18 +6,18 @@
 /*   By: jfoltan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 18:58:05 by jfoltan           #+#    #+#             */
-/*   Updated: 2023/07/14 16:57:23 by jfoltan          ###   ########.fr       */
+/*   Updated: 2023/07/14 20:49:51 by jfoltan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Minitalk.h"
 
-char *g_binaryvalue;
+char	*g_binaryvalue;
 
-int checkfornullbyte(char *str)
+int	checkfornullbyte(char *str)
 {
-	int i;
-	int zeros;
+	int	i;
+	int	zeros;
 
 	zeros = 0;
 	i = 0;
@@ -35,10 +35,10 @@ int checkfornullbyte(char *str)
 		return (0);
 }
 
-char btoa(char *src)
+char	btoa(char *src)
 {
-	int a;
-	int i;
+	int	a;
+	int	i;
 
 	i = 0;
 	a = 0;
@@ -52,20 +52,14 @@ char btoa(char *src)
 	return (a);
 }
 
-int recievebinarystring(int sig)
+int	recievebinarystring(int sig)
 {
-	static int i = 0;
+	static int	i = 0;
 
 	if (sig == SIGUSR1)
-	{
-		g_binaryvalue[i] = '1';
-		i++;
-	}
+		g_binaryvalue[i++] = '1';
 	if (sig == SIGUSR2)
-	{
-		g_binaryvalue[i] = '0';
-		i++;
-	}
+		g_binaryvalue[i++] = '0';
 	if (i == 8)
 	{
 		if (btoa(g_binaryvalue) == '\0')
@@ -83,10 +77,10 @@ int recievebinarystring(int sig)
 	return (1);
 }
 
-void action(int sig, siginfo_t *info, void *context)
+void	action(int sig, siginfo_t *info, void *context)
 {
-	(void)info;
-	(void)context;
+	(void) info;
+	(void) context;
 	if (sig == SIGUSR1 || sig == SIGUSR2)
 	{
 		if (recievebinarystring(sig) == 1)
@@ -108,17 +102,17 @@ void action(int sig, siginfo_t *info, void *context)
 	}
 }
 
-int main(void)
+int	main(void)
 {
-	int pid;
-	struct sigaction act;
+	int					pid;
+	struct sigaction	act;
 
 	g_binaryvalue = ft_calloc(9, sizeof(char));
 	pid = getpid();
 	ft_putstr_fd("Server's PID: ", 1);
 	ft_putnbr_fd(pid, 1);
 	ft_putchar_fd('\n', 1);
-	sigemptyset(&act.sa_mask);	
+	sigemptyset(&act.sa_mask);
 	act.sa_sigaction = &action;
 	act.sa_flags = SA_SIGINFO;
 	sigaction(SIGUSR1, &act, NULL);

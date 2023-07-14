@@ -6,10 +6,10 @@
 /*   By: jfoltan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:44:02 by jfoltan           #+#    #+#             */
-/*   Updated: 2022/12/19 18:44:03 by jfoltan          ###   ########.fr       */
+/*   Updated: 2023/07/14 20:59:58 by jfoltan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <stdlib.h>
+
 #include "libft.h"
 
 static int	ft_delicount(char const *s, char c)
@@ -52,7 +52,7 @@ static void	ft_freemebaby(char **ptr, int f)
 	{
 		free(ptr[f]);
 		f--;
-	}	
+	}
 	free(ptr);
 }
 

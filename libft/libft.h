@@ -6,7 +6,7 @@
 /*   By: jfoltan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/13 11:43:29 by jfoltan           #+#    #+#             */
-/*   Updated: 2022/12/13 11:43:32 by jfoltan          ###   ########.fr       */
+/*   Updated: 2023/07/14 20:50:18 by jfoltan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,6 @@ void			ft_lstiter(t_list *lst, void (*f)(void*));
 
 t_list			*ft_lstmap(t_list *lst, void *(*f)(void*), void (*del)(void *));
 
-char 			*ft_strreverse(char *src);
+char			*ft_strreverse(char *src);
 
 #endif

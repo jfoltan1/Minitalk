@@ -6,11 +6,12 @@
 /*   By: jfoltan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/21 16:51:00 by jfoltan           #+#    #+#             */
-/*   Updated: 2022/12/21 16:51:01 by jfoltan          ###   ########.fr       */
+/*   Updated: 2023/07/14 20:54:21 by jfoltan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
-#include<stddef.h>
+#include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>

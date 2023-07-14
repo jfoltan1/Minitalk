@@ -6,9 +6,10 @@
 /*   By: jfoltan <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 15:11:10 by jfoltan           #+#    #+#             */
-/*   Updated: 2022/12/22 15:11:11 by jfoltan          ###   ########.fr       */
+/*   Updated: 2023/07/14 21:00:57 by jfoltan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 #include <unistd.h>
 
@@ -22,7 +23,7 @@ void	ft_putnbr_fd(int n, int fd)
 	else
 	{
 		if (t < 0)
-		{	
+		{
 			ft_putchar_fd('-', fd);
 			t = t * -1;
 		}
